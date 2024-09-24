@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Player with SRT Highlight</title>
+    <style>
+        .highlight {
+            background-color: yellow;
+        }
+        .subtitle {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Audio Player with SRT Subtitle Highlight</h1>
+
+    <!-- File Inputs for Audio and SRT -->
+    <label for="audioInput">Select an Audio File (MP3, WAV):</label>
+    <input type="file" id="audioInput" accept="audio/*"><br><br>
+
+    <label for="srtInput">Select an SRT File:</label>
+    <input type="file" id="srtInput" accept=".srt"><br><br>
+
+    <!-- Audio Player and Subtitles Div -->
+    <audio id="audioPlayer" controls></audio>
+    <div id="subtitles"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
