@@ -37,22 +37,25 @@
         .bookmarked-text {
             background-color: #fffacd;
         }
-        .sticky-player {
+        .sticky-container {
             position: sticky;
             top: 0;
             background-color: white;
             padding: 10px 0;
             z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .audio-player {
+            margin-bottom: 10px;
         }
         #audioPlayer {
             width: 100%;
-            margin: 0;
         }
         #subtitles {
+            margin-top: 20px;
             background-color: #f0f0f0;
             padding: 15px;
             border-radius: 5px;
-            margin-top: 20px;
         }
         label {
             display: block;
@@ -62,16 +65,20 @@
             margin-bottom: 10px;
         }
         .button-group {
-            margin: 20px 0;
             display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
             gap: 10px;
         }
         .button-group button {
-            padding: 10px 20px;
+            padding: 10px 15px;
             color: white;
             border: none;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
+            border-radius: 4px;
+            flex-grow: 1;
+            text-align: center;
         }
         #exportBookmarks {
             background-color: #4CAF50;
@@ -123,21 +130,22 @@
 
     <!-- File Inputs for Audio and SRT -->
     <label for="audioInput">Select an Audio File (MP3, WAV):</label>
-    <input type="file" id="audioInput" accept="audio/*"><br><br>
+    <input type="file" id="audioInput" accept="audio/*">
 
     <label for="srtInput">Select an SRT File:</label>
-    <input type="file" id="srtInput" accept=".srt"><br><br>
+    <input type="file" id="srtInput" accept=".srt">
 
-    <!-- Sticky Audio Player -->
-    <div class="sticky-player">
-        <audio id="audioPlayer" controls></audio>
-    </div>
-    
-    <div class="button-group">
-        <button id="exportBookmarks">Export Bookmarks</button>
-        <button id="showBookmarked">Show Bookmarked</button>
-        <button id="showAll">Show All</button>
-        <button id="exportSavedWords">Export Saved Words</button>
+    <!-- Sticky container for audio player and buttons -->
+    <div class="sticky-container">
+        <div class="audio-player">
+            <audio id="audioPlayer" controls></audio>
+        </div>
+        <div class="button-group">
+            <button id="exportBookmarks">Export Bookmarks</button>
+            <button id="showBookmarked">Show Bookmarked</button>
+            <button id="showAll">Show All</button>
+            <button id="exportSavedWords">Export Saved Words</button>
+        </div>
     </div>
 
     <!-- Subtitles Div -->
