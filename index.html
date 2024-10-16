@@ -4,12 +4,117 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Audio Player with SRT Highlight</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
         .highlight {
-            background-color: yellow;
+            background-color: #ffff00;
         }
         .subtitle {
             cursor: pointer;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+        .bookmark-icon {
+            margin-right: 10px;
+            color: #ccc;
+            cursor: pointer;
+        }
+        .bookmarked {
+            color: #ffd700;
+        }
+        .bookmarked-text {
+            background-color: #fffacd;
+        }
+        .sticky-player {
+            position: sticky;
+            top: 0;
+            background-color: white;
+            padding: 10px 0;
+            z-index: 100;
+        }
+        #audioPlayer {
+            width: 100%;
+            margin: 0;
+        }
+        #subtitles {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+        .button-group {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+        }
+        .button-group button {
+            padding: 10px 20px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #exportBookmarks {
+            background-color: #4CAF50;
+        }
+        #exportBookmarks:hover {
+            background-color: #45a049;
+        }
+        #showBookmarked {
+            background-color: #008CBA;
+        }
+        #showBookmarked:hover {
+            background-color: #007B9A;
+        }
+        #showAll {
+            background-color: #555555;
+        }
+        #showAll:hover {
+            background-color: #333333;
+        }
+        #tooltip {
+            position: absolute;
+            background-color: #333;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            z-index: 1000;
+        }
+        .word {
+            cursor: pointer;
+        }
+        .word:hover {
+            text-decoration: underline;
+        }
+        .saved-word {
+            background-color: #ffff00;
+            font-weight: bold;
+        }
+        #exportSavedWords {
+            background-color: #FF4500;
+        }
+        #exportSavedWords:hover {
+            background-color: #FF6347;
         }
     </style>
 </head>
@@ -23,9 +128,21 @@
     <label for="srtInput">Select an SRT File:</label>
     <input type="file" id="srtInput" accept=".srt"><br><br>
 
-    <!-- Audio Player and Subtitles Div -->
-    <audio id="audioPlayer" controls></audio>
+    <!-- Sticky Audio Player -->
+    <div class="sticky-player">
+        <audio id="audioPlayer" controls></audio>
+    </div>
+    
+    <div class="button-group">
+        <button id="exportBookmarks">Export Bookmarks</button>
+        <button id="showBookmarked">Show Bookmarked</button>
+        <button id="showAll">Show All</button>
+        <button id="exportSavedWords">Export Saved Words</button>
+    </div>
+
+    <!-- Subtitles Div -->
     <div id="subtitles"></div>
+    <div id="tooltip" style="display: none;"></div>
 
     <script src="app.js"></script>
 </body>
