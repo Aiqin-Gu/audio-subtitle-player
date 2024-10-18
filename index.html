@@ -12,6 +12,7 @@
             margin: 0 auto;
             padding: 20px;
             line-height: 1.6;
+            padding-top: 100px; /* Adjust this value based on the height of your sticky container */
         }
         h1 {
             color: #333;
@@ -123,6 +124,17 @@
         #exportSavedWords:hover {
             background-color: #FF6347;
         }
+        #loadingMessage {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
@@ -147,6 +159,8 @@
             <button id="exportSavedWords">Export Saved Words</button>
         </div>
     </div>
+
+    <div id="loadingMessage" style="display: none;">Loading previous session...</div>
 
     <!-- Subtitles Div -->
     <div id="subtitles"></div>
