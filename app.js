@@ -83,11 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function displaySubtitles() {
-        const subtitlesToShow = showOnlyBookmarked 
-            ? subtitles.filter(subtitle => bookmarks.has(subtitle.id.toString()))
-            : subtitles;
-
-        subtitlesDiv.innerHTML = subtitlesToShow.map(subtitle => `
+        subtitlesDiv.innerHTML = subtitles.map(subtitle => `
             <p class="subtitle ${bookmarks.has(subtitle.id.toString()) ? 'bookmarked-text' : ''}" data-start="${subtitle.startTime}" data-end="${subtitle.endTime}">
                 <i class="fas fa-bookmark bookmark-icon ${bookmarks.has(subtitle.id.toString()) ? 'bookmarked' : ''}" data-id="${subtitle.id}"></i>
                 <span class="subtitle-text">${wrapWordsInSpan(subtitle.text)}</span>
@@ -139,9 +135,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function wrapWordsInSpan(text) {
         return text.split(' ').map(word => {
-            const cleanWord = word.replace(/[^a-zA-Z]/g, '');
-            const isWordSaved = savedWords.has(cleanWord.toLowerCase());
-            return `<span class="word ${isWordSaved ? 'saved-word' : ''}" data-word="${cleanWord}">${word}</span>`;
+            const cleanWord = word.replace(/[^a-zA-Z]/g, '').toLowerCase();
+            return `<span class="word ${savedWords.has(cleanWord) ? 'saved-word' : ''}" data-word="${cleanWord}">${word}</span>`;
         }).join(' ');
     }
 
@@ -267,7 +262,8 @@ document.addEventListener('DOMContentLoaded', () => {
             bookmarks: Array.from(bookmarks),
             savedWords: Array.from(savedWords),
             currentTime: audioPlayer.currentTime,
-            srtFileName: currentSrtFile
+            srtFileName: currentSrtFile,
+            audioFileName: audioPlayer.src ? new URL(audioPlayer.src).pathname.split('/').pop() : null
         };
         localStorage.setItem('audioPlayerState', JSON.stringify(state));
     }
@@ -276,17 +272,37 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('beforeunload', saveState);
 
     // Function to load state
-    function loadState(srtFileName) {
+    function loadState() {
         const savedState = localStorage.getItem('audioPlayerState');
         if (savedState) {
             const state = JSON.parse(savedState);
-            if (state.srtFileName === srtFileName) {
-                bookmarks = new Set(state.bookmarks);
-                savedWords = new Set(state.savedWords);
+            bookmarks = new Set(state.bookmarks);
+            savedWords = new Set(state.savedWords);
+            currentSrtFile = state.srtFileName;
+            
+            if (state.audioFileName) {
+                // If there's a saved audio file, load it
+                audioPlayer.src = state.audioFileName;
                 audioPlayer.currentTime = state.currentTime;
-                return true;
             }
+
+            // If there's a saved SRT file, load it
+            if (currentSrtFile) {
+                // You might need to implement a way to load the SRT file here
+                // For now, we'll just update the display
+                displaySubtitles();
+            }
+
+            return true;
         }
         return false;
+    }
+
+    if (loadState()) {
+        // If state was loaded successfully, try to load the SRT file
+        if (currentSrtFile) {
+            // You might need to implement a way to load the SRT file here
+            // This could involve triggering a file input or using the Fetch API if the file is stored on the server
+        }
     }
 });
