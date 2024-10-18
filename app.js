@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let bookmarks = new Set();
     let showOnlyBookmarked = false;
     let savedWords = new Set();
+    let currentSrtFile = '';
 
     let subtitles = [];
 
@@ -24,11 +25,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     srtInput.addEventListener('change', (event) => {
         const file = event.target.files[0];
+        currentSrtFile = file.name;
         const reader = new FileReader();
 
         reader.onload = (e) => {
             const srtContent = e.target.result;
             subtitles = parseSRT(srtContent);
+            if (!loadState(currentSrtFile)) {
+                // If no saved state, reset bookmarks and savedWords
+                bookmarks = new Set();
+                savedWords = new Set();
+            }
             displaySubtitles();
         };
 
@@ -86,6 +93,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span class="subtitle-text">${wrapWordsInSpan(subtitle.text)}</span>
             </p>
         `).join('');
+
+        subtitlesDiv.querySelectorAll('.subtitle').forEach(subtitleElement => {
+            const id = subtitleElement.querySelector('.bookmark-icon').dataset.id;
+            if (bookmarks.has(id)) {
+                subtitleElement.classList.add('bookmarked-text');
+                subtitleElement.querySelector('.bookmark-icon').classList.add('bookmarked');
+            }
+        });
+
+        subtitlesDiv.querySelectorAll('.word').forEach(wordElement => {
+            const word = wordElement.dataset.word.toLowerCase();
+            if (savedWords.has(word)) {
+                wordElement.classList.add('saved-word');
+            }
+        });
 
         subtitlesDiv.querySelectorAll('.subtitle').forEach(subtitleElement => {
             subtitleElement.addEventListener('click', (event) => {
@@ -219,6 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
             savedWords.add(word);
             wordElement.classList.add('saved-word');
         }
+        saveState();
     }
 
     function exportSavedWords() {
@@ -236,5 +259,34 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             alert('No saved words to export.');
         }
+    }
+
+    // Function to save state
+    function saveState() {
+        const state = {
+            bookmarks: Array.from(bookmarks),
+            savedWords: Array.from(savedWords),
+            currentTime: audioPlayer.currentTime,
+            srtFileName: currentSrtFile
+        };
+        localStorage.setItem('audioPlayerState', JSON.stringify(state));
+    }
+
+    // Save state when user leaves the page
+    window.addEventListener('beforeunload', saveState);
+
+    // Function to load state
+    function loadState(srtFileName) {
+        const savedState = localStorage.getItem('audioPlayerState');
+        if (savedState) {
+            const state = JSON.parse(savedState);
+            if (state.srtFileName === srtFileName) {
+                bookmarks = new Set(state.bookmarks);
+                savedWords = new Set(state.savedWords);
+                audioPlayer.currentTime = state.currentTime;
+                return true;
+            }
+        }
+        return false;
     }
 });
