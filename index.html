@@ -99,11 +99,40 @@
         #showAll:hover {
             background-color: #333333;
         }
-        #saveStatus {
-            background-color: #f39c12;
+        #tooltip {
+            position: absolute;
+            background-color: #333;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            z-index: 1000;
         }
-        #importStatus {
-            background-color: #3498db;
+        .word {
+            cursor: pointer;
+        }
+        .word:hover {
+            text-decoration: underline;
+        }
+        .saved-word {
+            background-color: yellow; /* Highlight color */
+        }
+        #exportSavedWords {
+            background-color: #FF4500;
+        }
+        #exportSavedWords:hover {
+            background-color: #FF6347;
+        }
+        #loadingMessage {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            z-index: 1000;
         }
     </style>
 </head>
@@ -126,12 +155,15 @@
             <button id="exportBookmarks">Export Bookmarks</button>
             <button id="showBookmarked">Show Bookmarked</button>
             <button id="showAll">Show All</button>
-            <button id="saveStatus">Save Status</button>
-            <button id="importStatus">Import Status</button>
+            <button id="exportSavedWords">Export Saved Words</button>
         </div>
     </div>
 
+    <div id="loadingMessage" style="display: none;">Loading previous session...</div>
+
+    <!-- Subtitles Div -->
     <div id="subtitles"></div>
+    <div id="tooltip" style="display: none;"></div>
 
     <script src="app.js"></script>
 </body>
